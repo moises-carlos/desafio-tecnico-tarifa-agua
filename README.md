@@ -6,8 +6,6 @@ API REST desenvolvida em Spring Boot para gerenciar e calcular tarifas de água 
 
 - **Linguagem**: Java 21
 - **Framework**: Spring Boot 4.0.6
-- **JPA / ORM**: Spring Data JPA
-- **Utilitários**: Lombok
 - **Banco de Dados**: PostgreSQL 15+
 - **Gerenciador de Dependências**: Maven
 - **Documentação de API**: Swagger / OpenAPI (Springdoc 3.0.2)
@@ -30,9 +28,34 @@ O sistema calcula o consumo de água de forma progressiva por faixas. As tarifas
 - Maven
 - PostgreSQL rodando localmente
 
-### 2. Configurando o Banco de Dados
+### 2. Clonando o Repositório
 
-Crie o arquivo `src/main/resources/application-local.properties` com suas credenciais:
+```bash
+git clone https://github.com/moises-carlos/desafio-tecnico-tarifa-agua.git
+cd desafio-tecnico-tarifa-agua
+```
+
+### 3. Criando o Banco de Dados
+
+```bash
+psql -U seu_usuario -c "CREATE DATABASE agua_tarifa;"
+```
+
+### 4. Criando as Tabelas
+
+```bash
+psql -U seu_usuario -d agua_tarifa -f scripts/schema.sql
+```
+
+### 5. Populando com Dados de Exemplo (Opcional)
+
+```bash
+psql -U seu_usuario -d agua_tarifa -f scripts/seed.sql
+```
+
+### 6. Configurando as Credenciais
+
+Crie o arquivo `src/main/resources/application-local.properties`:
 
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/agua_tarifa
@@ -40,12 +63,13 @@ spring.datasource.username=seu_usuario
 spring.datasource.password=sua_senha
 ```
 
-### 3. Rodando o Projeto
+### 7. Rodando o Projeto
 
 ```bash
 mvn clean install
 mvn spring-boot:run -Dspring-boot.run.profiles=local
 ```
+
 A API estará rodando em `http://localhost:8080`.
 
 ## Documentação da API (Swagger)
