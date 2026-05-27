@@ -12,6 +12,6 @@ public interface FaixaConsumoRepository extends JpaRepository<FaixaConsumo, UUID
 
     List<FaixaConsumo> findByCategoriaConsumoTipoAndCategoriaConsumoTabelaTarifaId(
             TipoCategoria tipo,
-            UUID tabelaTarifariaId
+            UUID tabelaTarifaId
     );
 }

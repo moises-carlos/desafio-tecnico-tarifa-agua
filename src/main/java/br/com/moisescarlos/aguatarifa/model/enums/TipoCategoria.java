@@ -4,5 +4,5 @@ public enum TipoCategoria {
     COMERCIAL,
     INDUSTRIAL,
     PARTICULAR,
-    PUBLIC
+    PUBLICO
 }

@@ -25,7 +25,7 @@ public class CategoriaConsumo {
     private TipoCategoria tipo;
 
     @ManyToOne
-    @JoinColumn(name = "tabela_tarifaria_id", nullable = false)
+    @JoinColumn(name = "tabela_tarifa_id", nullable = false)
     private TabelaTarifa tabelaTarifa;
 
     @OneToMany(mappedBy = "categoriaConsumo", cascade = CascadeType.ALL, orphanRemoval = true)
