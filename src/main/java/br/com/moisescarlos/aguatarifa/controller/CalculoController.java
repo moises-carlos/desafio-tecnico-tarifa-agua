@@ -17,12 +17,11 @@ public class CalculoController {
 
     private final CalculoService service;
 
-    @PostMapping("/{tabelaId}")
+    @PostMapping
     public ResponseEntity<CalculoResponse> calcular(
-            @PathVariable UUID tabelaId,
             @RequestBody @Valid CalculoRequest request
     ) {
-        CalculoResponse response = service.calcular(request, tabelaId);
+        CalculoResponse response = service.calcular(request);
         return ResponseEntity.ok(response);
     }
 }

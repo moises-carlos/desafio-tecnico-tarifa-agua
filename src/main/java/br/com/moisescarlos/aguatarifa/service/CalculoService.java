@@ -4,7 +4,7 @@ import br.com.moisescarlos.aguatarifa.dto.request.CalculoRequest;
 import br.com.moisescarlos.aguatarifa.dto.response.CalculoResponse;
 import br.com.moisescarlos.aguatarifa.dto.response.DetalhesFaixaResponse;
 import br.com.moisescarlos.aguatarifa.dto.response.FaixaInfo;
-import br.com.moisescarlos.aguatarifa.exception.TabelaNaoEncontradaException;
+
 import br.com.moisescarlos.aguatarifa.model.FaixaConsumo;
 import br.com.moisescarlos.aguatarifa.model.TabelaTarifa;
 import br.com.moisescarlos.aguatarifa.repository.FaixaConsumoRepository;
@@ -26,9 +26,9 @@ public class CalculoService {
     private final FaixaConsumoRepository faixaConsumoRepository;
     private final TabelaTarifaRepository tabelaTarifariaRepository;
 
-    public CalculoResponse calcular(CalculoRequest request, UUID tabelaId) {
-        TabelaTarifa tabela = tabelaTarifariaRepository.findById(tabelaId)
-                .orElseThrow(() -> new TabelaNaoEncontradaException(tabelaId));
+    public CalculoResponse calcular(CalculoRequest request) {
+        TabelaTarifa tabela = tabelaTarifariaRepository.findFirstByOrderByDataVigenciaDesc()
+                .orElseThrow(() -> new IllegalArgumentException("Nenhuma tabela tarifária encontrada no sistema"));
 
         List<FaixaConsumo> faixas = faixaConsumoRepository
                 .findByCategoriaConsumoTipoAndCategoriaConsumoTabelaTarifaId(
@@ -57,7 +57,7 @@ public class CalculoService {
         for (FaixaConsumo faixa : faixas) {
             if (consumoRestante <= 0) break;
 
-            int capacidadeFaixa = faixa.getFim() - faixa.getInicio() + 1;
+            int capacidadeFaixa = (faixa.getInicio() == 0) ? faixa.getFim() : (faixa.getFim() - faixa.getInicio() + 1);
             int m3Cobrados = Math.min(consumoRestante, capacidadeFaixa);
 
             BigDecimal subtotal = faixa.getValorUnitario()
@@ -72,6 +72,10 @@ public class CalculoService {
                     faixa.getValorUnitario(),
                     subtotal
             ));
+        }
+
+        if (consumoRestante > 0) {
+            throw new IllegalArgumentException("O consumo informado excede a cobertura máxima das faixas cadastradas na tabela tarifária.");
         }
 
         return new CalculoResponse(
